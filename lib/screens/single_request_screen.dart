@@ -88,11 +88,20 @@ class SingleRequestScreen extends StatelessWidget {
                           final url = 'https://www.google.com/maps/search/'
                               '?api=1&query=${request.medicalCenter.latitude},'
                               '${request.medicalCenter.longitude}';
-                          if (await canLaunch(url)) {
-                            launch(url);
-                          } else {
-                            Fluttertoast.showToast(msg: 'Could not launch map');
-                          }
+                          print(url);
+                          final response = canLaunch(url);
+                          response.onError((error, stackTrace) {
+                            print(error);
+                            return null;
+                          });
+                          // if (await canLaunch(
+                          //   url,
+                          // )) {
+                          await launch(url,
+                              forceWebView: true, enableJavaScript: true);
+                          // } else {
+                          // Fluttertoast.showToast(msg: 'Could not launch map');
+                          // }
                         },
                         icon: const Icon(Icons.navigation),
                         label: const Text('Get Directions'),
@@ -131,9 +140,7 @@ class SingleRequestScreen extends StatelessWidget {
                 ),
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      MainColors.primary,
-                    ),
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
                     padding: MaterialStateProperty.all(
                       const EdgeInsets.all(12),
                     ),
@@ -142,12 +149,8 @@ class SingleRequestScreen extends StatelessWidget {
                     )),
                   ),
                   onPressed: () async {
-                    final contact = 'tel:+961${request.contactNumber}';
-                    if (await canLaunch(contact)) {
-                      launch(contact);
-                    } else {
-                      Fluttertoast.showToast(msg: 'Something wrong happened');
-                    }
+                    final contact = 'tel:+91${request.contactNumber}';
+                    launch(contact);
                   },
                   child: Center(
                     child: Text(
@@ -193,7 +196,7 @@ class _MarkFulfilledBtnState extends State<_MarkFulfilledBtn> {
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
-                  Colors.green[600],
+                  Colors.red[600],
                 ),
                 padding: MaterialStateProperty.all(
                   const EdgeInsets.all(12),
@@ -222,7 +225,7 @@ class _MarkFulfilledBtnState extends State<_MarkFulfilledBtn> {
               },
               child: Center(
                 child: Text(
-                  'Mark as Fulfilled',
+                  'Reject',
                   textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
