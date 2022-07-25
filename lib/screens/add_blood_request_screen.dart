@@ -95,6 +95,7 @@ class _AddBloodRequestScreenState extends State<AddBloodRequestScreen> {
           'requestDate': _requestDate,
           'isFulfilled': false,
           'medicalCenter': _medicalCenter.toJson(),
+          'rejected': [],
         });
         _resetFields();
         Fluttertoast.showToast(msg: 'Request successfully Submitted');

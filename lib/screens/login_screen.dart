@@ -1,3 +1,4 @@
+import 'package:blood_donation/common/app_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -150,10 +151,11 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passController.text,
         );
+        AppConfig.userId = response.user.uid;
         Navigator.of(context).pushNamedAndRemoveUntil(
           HomeScreen.route,
           (route) => false,

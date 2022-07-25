@@ -1,3 +1,4 @@
+import 'package:blood_donation/common/app_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -211,7 +212,9 @@ class _MarkFulfilledBtnState extends State<_MarkFulfilledBtn> {
                   await FirebaseFirestore.instance
                       .collection('blood_requests')
                       .doc(widget.request.id)
-                      .update({'isFulfilled': true});
+                      .update({
+                    'rejected': [AppConfig.userId]
+                  });
                   widget.request.isFulfilled = true;
                   Navigator.pop(context);
                 } on FirebaseException catch (e) {
