@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:blood_donation/common/app_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -150,12 +151,17 @@ class SingleRequestScreen extends StatelessWidget {
                     )),
                   ),
                   onPressed: () async {
-                    final contact = 'tel:+91${request.contactNumber}';
-                    launch(contact);
+                    request.uid == FirebaseAuth.instance.currentUser.uid;
+                    await FirebaseFirestore.instance
+                        .collection('blood_requests')
+                        .doc(request.id)
+                        .update({
+                      'accepted': [request.uid],
+                    });
                   },
                   child: Center(
                     child: Text(
-                      'Contact',
+                      'Accept',
                       textAlign: TextAlign.center,
                       style: textTheme.subtitle1.copyWith(color: Colors.white),
                     ),
@@ -207,13 +213,19 @@ class _MarkFulfilledBtnState extends State<_MarkFulfilledBtn> {
                 )),
               ),
               onPressed: () async {
+                AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                        id: 10,
+                        channelKey: 'basic_channel',
+                        title: 'Blood Request',
+                        body: 'New Blood Request  has been recieved'));
                 setState(() => _isLoading = true);
                 try {
                   await FirebaseFirestore.instance
                       .collection('blood_requests')
                       .doc(widget.request.id)
                       .update({
-                    'rejected': [AppConfig.userId]
+                    'isFulfilled': true,
                   });
                   widget.request.isFulfilled = true;
                   Navigator.pop(context);

@@ -1,3 +1,4 @@
+import 'package:blood_donation/common/app_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ import '../data/blood_request.dart';
 import '../widgets/blood_request_tile.dart';
 
 class AllBloodRequests extends StatefulWidget {
-  const AllBloodRequests({Key key}) : super(key: key);
+  final String type;
+  const AllBloodRequests({Key key, this.type}) : super(key: key);
 
   @override
   _AllBloodRequestsState createState() => _AllBloodRequestsState();
@@ -21,12 +23,30 @@ class _AllBloodRequestsState extends State<AllBloodRequests> {
   @override
   void initState() {
     super.initState();
-    _query = FirebaseFirestore.instance
-        .collection('blood_requests')
-        .where('isFulfilled', isEqualTo: false)
-        .orderBy('requestDate')
-        .limit(30)
-        .snapshots();
+    if (widget.type == null) {
+      _query = FirebaseFirestore.instance
+          .collection('blood_requests')
+          .where('isFulfilled', isEqualTo: false)
+          .orderBy('requestDate')
+          .limit(30)
+          .snapshots();
+    } else {
+      if (widget.type == 'rejected') {
+        _query = FirebaseFirestore.instance
+            .collection('blood_requests')
+            .where('isFulfilled', isEqualTo: false)
+            .orderBy('requestDate')
+            .limit(30)
+            .snapshots();
+      } else {
+        _query = FirebaseFirestore.instance
+            .collection('blood_requests')
+            .where('accepted', arrayContains: AppConfig.userId)
+            .orderBy('requestDate')
+            .limit(30)
+            .snapshots();
+      }
+    }
   }
 
   @override

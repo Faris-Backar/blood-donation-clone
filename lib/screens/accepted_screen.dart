@@ -1,5 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:blood_donation/screens/accepted_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -8,30 +6,15 @@ import '../common/colors.dart';
 import '../widgets/all_blood_requests.dart';
 import '../widgets/custom_drawer.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const route = 'home';
-  const HomeScreen({Key key}) : super(key: key);
+class AcceptedRequestScreen extends StatelessWidget {
+  static const route = 'acceptedRequestedScreen';
+  const AcceptedRequestScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
     return Scaffold(
       drawer: const CustomDrawer(),
-      appBar: AppBar(title: const Text('Blood Requests'), actions: [
-        IconButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed(AcceptedRequestScreen.route);
-          },
-          icon: Icon(Icons.notification_important),
-        ),
-      ]),
+      appBar: AppBar(title: const Text('Accepted Blood Requests')),
       body: SafeArea(
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -78,7 +61,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SliverAppBar(
               title: Text(
-                'Current Requests',
+                'Current Accepted Requests',
                 style: Theme.of(context)
                     .textTheme
                     .headline5
@@ -89,7 +72,9 @@ class HomeScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               automaticallyImplyLeading: false,
             ),
-            const AllBloodRequests(),
+            const AllBloodRequests(
+              type: 'accepted',
+            ),
           ],
         ),
       ),
